@@ -124,6 +124,28 @@ namespace ByteBank.Forum.Controllers
                 return View("Error");
         }
 
+        public async Task<ActionResult> Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Login(ContaLoginViewModel modelo)
+        {
+            if (ModelState.IsValid)
+            {
+                //Realizar login pelo Identity
+                return View(modelo);
+            }
+            else
+            {
+                //Algo de errado aconteceu
+                return View(modelo);
+            }
+           
+        }
+
+
         private void AdicionaErros(IdentityResult resultado)
         {
             //Metodo erros

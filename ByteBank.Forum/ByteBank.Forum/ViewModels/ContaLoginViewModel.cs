@@ -3,21 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.Mvc.Html;
 
-//Atributos que irão aparecer no formulário
 namespace ByteBank.Forum.ViewModels
 {
-    public class ContaRegistrarViewModel
+    public class ContaLoginViewModel
     {
-        [Required] //Obrigatorio
-        public string UserName { get; set; }
-
-        [Required]
-        [Display(Name = "Nome Completo")]// Informação que mostra para o usuário
-        public string NomeCompleto { get; set; }
-
         [Required]
         [EmailAddress]
         public string Email { get; set; }
