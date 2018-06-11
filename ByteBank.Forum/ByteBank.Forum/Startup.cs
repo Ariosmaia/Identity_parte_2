@@ -83,6 +83,12 @@ namespace ByteBank.Forum
                     //Criando atavés das opções do Owin, tada  vez que precisa de um token ele será gerado
                     userManager.UserTokenProvider = new DataProtectorTokenProvider<UsuarioAplicacao>(dataProtectionProviderCreated);
 
+
+                    userManager.MaxFailedAccessAttemptsBeforeLockout = 3;
+                    userManager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                    userManager.UserLockoutEnabledByDefault = true;
+
+
                     return userManager;
                 });
 
