@@ -1,0 +1,27 @@
+﻿@model ByteBank.Forum.ViewModels.ContaRegistrarViewModel
+@*Modelo que vou usar "ContaRegistroViweModel*@
+
+@{
+    ViewBag.Title = "Registrar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Registrar</h2>
+
+@using (Html.BeginForm()) // Inicia um formulário
+{
+    <h4> Complete o cadastro de sua conta! </h4>
+    <hr />
+
+    @Html.ValidationSummary("", new { @class = "text-danger" }) //Resume todas as mensagens de erro
+
+    @Html.EditorForModel() // Com base no preenchido no ContaRegistroViewModel ele cria os campos.
+
+    // Botão para enviar as informações
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Registrar" class="btn btn-default" />
+        </div>
+    </div>
+
+}
