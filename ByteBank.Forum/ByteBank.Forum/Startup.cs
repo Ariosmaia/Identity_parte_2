@@ -41,7 +41,7 @@ namespace ByteBank.Forum
 
 
             //3)
-            //UserManager gerencia o Identity, o UserStore faz o link para o Entity
+            //UserManager gerencia o Identity, o UserStore faz o link para o Entity. Relacionado ao cadsatro de usuario.
             builder.CreatePerOwinContext<UserManager<UsuarioAplicacao>>(
                 (opcoes, contextoOwin) =>
                 {
@@ -84,6 +84,20 @@ namespace ByteBank.Forum
 
                     return userManager;
                 });
-        }
+
+            builder.CreatePerOwinContext<SignInManager<UsuarioAplicacao, string>>(
+                (opcoes, contextoOwin) =>
+                {
+                    var userManager = contextoOwin.Get<UserManager<UsuarioAplicacao>>();
+
+                    var signInManager =
+                        new SignInManager<UsuarioAplicacao, string>(
+                            userManager,
+                            contextoOwin.Authentication);
+
+                    return signInManager;
+                });
+                
+         }
     }
 }

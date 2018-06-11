@@ -36,6 +36,24 @@ namespace ByteBank.Forum.Controllers
             }
         }
 
+        private SignInManager<UsuarioAplicacao, string> _signInManager;
+        private SignInManager<UsuarioAplicacao, string> SignInManager
+        {
+            get
+            {
+                if (_signInManager == null)
+                {
+                    var contextOwin = HttpContext.GetOwinContext(); // Pega o contexto do Owin
+                    _signInManager = contextOwin.GetUserManager<SignInManager<UsuarioAplicacao, string> > (); // Joga o contexto dentro da variavel
+                }
+                return _signInManager;
+            }
+            set
+            {
+                _signInManager = value;
+            }
+        }
+
         /////////////////////////////////////
         // GET: /Account/Login/Acessar a página
         public ActionResult Registrar()
@@ -135,22 +153,38 @@ namespace ByteBank.Forum.Controllers
             if (ModelState.IsValid)
             {
                 var usuario = await UserManager.FindByEmailAsync(modelo.Email);
-                if (usuario != null)
-                {
-                    if (modelo.Senha == usuario.PasswordHash)
-                    {
 
-                    }
+                if (usuario == null)
+                    return SenhaOuUsuarioInvalidos();
+                
+
+               
+                var signInResultado = 
+                    await SignInManager.PasswordSignInAsync(
+                        usuario.UserName,
+                        modelo.Senha,
+                        isPersistent: false,
+                        shouldLockout: false);
+
+                switch (signInResultado)
+                {
+                    case SignInStatus.Success:
+                        return RedirectToAction("Index", "Home");
+                    default:
+                        return SenhaOuUsuarioInvalidos();
+                            
                 }
-                //Realizar login pelo Identity
-                return View(modelo);
             }
-            else
-            {
-                //Algo de errado aconteceu
-                return View(modelo);
-            }
-           
+            
+            
+            //Algo de errado aconteceu
+            return View(modelo);
+        }
+
+        private ActionResult SenhaOuUsuarioInvalidos()
+        {
+            ModelState.AddModelError("", "Credenciais invalidas!");
+            return View("Login");
         }
 
 
