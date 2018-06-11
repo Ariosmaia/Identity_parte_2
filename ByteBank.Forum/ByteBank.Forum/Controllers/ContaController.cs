@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ByteBank.Forum.App_Start.Identity;
+using Microsoft.Owin.Security;
+
 
 //Gerenciamento da conta do usuário
 
@@ -53,6 +55,16 @@ namespace ByteBank.Forum.Controllers
                 _signInManager = value;
             }
         }
+
+        public IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                var contextoOwin = Request.GetOwinContext();
+                return contextoOwin.Authentication;
+            }
+        }
+
 
         /////////////////////////////////////
         // GET: /Account/Login/Acessar a página
@@ -180,6 +192,14 @@ namespace ByteBank.Forum.Controllers
             //Algo de errado aconteceu
             return View(modelo);
         }
+
+        [HttpPost]
+        public ActionResult Logoff()
+        {
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            return RedirectToAction("Index", "Home");
+        }
+
 
         private ActionResult SenhaOuUsuarioInvalidos()
         {

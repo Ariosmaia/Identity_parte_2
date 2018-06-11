@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -28,8 +30,23 @@
 
                 @*Incluir no menu a opção de registro*@
                 <ul class="nav navbar-nav navbar-right">
-                    <li>@Html.ActionLink("Registrar", "Registrar", "Conta")</li>
-                    <li>@Html.ActionLink("Login", "Login", "Conta")</li>
+
+                    @if (Request.IsAuthenticated)
+                    {
+                        using (Html.BeginForm("Logoff", "Conta", FormMethod.Post, new { id = "formulario_logoff" }))
+                        {
+
+                        }
+
+                        <li> <p class="navbar-text"> Olá, @User.Identity.GetUserName()</p> </li>
+                        <li> <a href="javascript:document.getElementById('formulario_logoff').submit()"> Logoff </a> </li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Registrar", "Registrar", "Conta")</li>
+                        <li>@Html.ActionLink("Login", "Login", "Conta")</li>
+                    }
+                    
                 </ul>
             </div>
         </div>
