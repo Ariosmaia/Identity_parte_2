@@ -134,6 +134,14 @@ namespace ByteBank.Forum.Controllers
         {
             if (ModelState.IsValid)
             {
+                var usuario = await UserManager.FindByEmailAsync(modelo.Email);
+                if (usuario != null)
+                {
+                    if (modelo.Senha == usuario.PasswordHash)
+                    {
+
+                    }
+                }
                 //Realizar login pelo Identity
                 return View(modelo);
             }
