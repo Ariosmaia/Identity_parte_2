@@ -1,4 +1,4 @@
-# Identity_parte_1
+# Identity_parte_2
 
 # Criando projeto do zero
 ## Instalndo os pacotes necessários
@@ -9,5 +9,7 @@
     Install-Package Microsoft.Owin.Host.SystemWeb 
     Install-Package Microsoft.AspNet.Identity.Owin
 
+## Extensão do Owin instalada:
 
+    Install-Package Microsoft.Owin.Security.Cookies 
   
