@@ -181,6 +181,11 @@ namespace ByteBank.Forum.Controllers
                 switch (signInResultado)
                 {
                     case SignInStatus.Success:
+                        if (!usuario.EmailConfirmed)
+                        {
+                            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                            return View("AguardandoConfirmacao");
+                        }
                         return RedirectToAction("Index", "Home");
                     case SignInStatus.LockedOut:
                         var senhaCorreta = 
@@ -203,6 +208,49 @@ namespace ByteBank.Forum.Controllers
             
             //Algo de errado aconteceu
             return View(modelo);
+        }
+
+        public ActionResult EsqueciSenha()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EsqueciSenha(ContaEsqueciSenhaViewModel modelo)
+        {
+            if (ModelState.IsValid)
+            {
+                //Gerar o token de reset senha
+                //Gerar o url para o usuário/
+                // Vamos enviar esse email
+                var usuario = await UserManager.FindByEmailAsync(modelo.Email);
+
+                if (usuario != null)
+                {
+                    var token =
+                        await UserManager.GeneratePasswordResetTokenAsync(usuario.Id);
+
+                    var linkDeCallback =
+                        Url.Action(
+                            "ConfirmacaoAlteracaoSenha", //Criei Action abaixo
+                            "Conta",
+                            new { usuarioId = usuario.Id, token = token },
+                            protocol: Request.Url.Scheme);
+
+                    await UserManager.SendEmailAsync(
+                        usuario.Id,
+                        "Fórum ByteBank - Alteração de senha",
+                        $"Clique aqui {linkDeCallback} para alterar a sua senha!");
+                }
+                return View("EmailAlteracaoSenhaEnviado");
+
+            }
+            return View();
+        }
+
+        public ActionResult ConfirmacaoAlteracaoSenha(string usuarioId, string tolken)
+        {
+            return View();
         }
 
         [HttpPost]
